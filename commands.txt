@@ -1,0 +1,4 @@
+
+curl -H "Content-Type: application/json" -X POST ${BASE_DOMAIN}/meter-read -d '{"customerId": "john-doe", "amount": 123}'
+
+curl -H "Content-Type: application/json" -X GET ${BASE_DOMAIN}/meter-read/john-doe

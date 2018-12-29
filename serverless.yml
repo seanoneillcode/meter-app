@@ -1,12 +1,31 @@
 # serverless.yml
 
-service: meter
+plugins:
+  - serverless-offline
+
+service: meter-app
+
+custom:
+  tableName: 'meter-table-${self:provider.stage}'
 
 provider:
   name: aws
   runtime: nodejs6.10
   stage: dev
   region: eu-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["MeterDynamoDBTable", "Arn" ] }
+  environment:
+    METER_TABLE: ${self:custom.tableName}
 
 functions:
   app:
@@ -14,3 +33,21 @@ functions:
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
+
+resources:
+  Resources:
+    MeterDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: customerId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: customerId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}
