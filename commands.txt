@@ -1,4 +1,13 @@
 
+export BASE_DOMAIN=https://cbwymqw7d7.execute-api.eu-west-2.amazonaws.com/dev
+
 curl -H "Content-Type: application/json" -X POST ${BASE_DOMAIN}/meter-read -d '{"customerId": "john-doe", "amount": 123}'
 
 curl -H "Content-Type: application/json" -X GET ${BASE_DOMAIN}/meter-read/john-doe
+
+
+local
+
+curl -H "Content-Type: application/json" -X POST http://localhost:3000/meter-read -d '{"customerId": "john-doe", "amount": 123}'
+
+curl -H "Content-Type: application/json" -X GET http://localhost:3000/meter-read/john-doe

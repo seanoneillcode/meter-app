@@ -1,12 +1,16 @@
 # serverless.yml
 
 plugins:
+  - serverless-dynamodb-local
   - serverless-offline
 
 service: meter-app
 
 custom:
   tableName: 'meter-table-${self:provider.stage}'
+  dynamodb:
+    start:
+      migrate: true
 
 provider:
   name: aws
